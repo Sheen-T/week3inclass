@@ -109,7 +109,7 @@ conflict_year <- conflict_year %>%
 conflict_year <- conflict_year %>%
   rename(armed_conflict = armed_conflict_lag1)
 conflict_year
-
+head(data_conflict, 10)
 
 #data_long
 #df_country_filtered
@@ -128,6 +128,13 @@ combined_all_dfs <- reduce(
 
 
 combined_all_dfs
-write.csv(combined_all_dfs, "/Users/achlys/Desktop/week3-inclass-Sheen-T-main/data/analytical/finaldataset.csv", row.names = FALSE)
+write.csv(combined_all_dfs, "/Users/achlys/Desktop/week3-inclass-Sheen-T-main/data/analytical/finaldataset.csv")
 
-summary(combined_all_dfs)
+summary(combined_all_dfs)  
+
+finaldata <- read.csv("/Users/achlys/Desktop/week3-inclass-Sheen-T-main/data/analytical/finaldataset.csv")
+
+finaldata[is.na(finaldata)] <- 0
+finaldata <- finaldata %>% select(-1)
+
+

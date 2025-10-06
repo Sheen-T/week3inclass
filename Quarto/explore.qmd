@@ -1,0 +1,86 @@
+---
+title: "explore"
+format: html
+---
+
+### Check
+
+```{r}
+
+```
+
+### Number of countries that ever had an armed conflict
+
+```{r}
+library(dplyr)
+finaldata <- read.csv("/Users/achlys/Desktop/week3-inclass-Sheen-T-main/data/analytical/finaldataset.csv")
+
+#finaldata[is.na(finaldata)] <- 0
+finaldata <- finaldata %>% select(-1)
+finaldata %>%
+  filter(armed_conflict == 1) %>%
+  distinct(iso) %>%
+  summarise(n_countries = n())
+```
+
+### Number of countries that had an armed conflict exposure in each year.
+
+```{r}
+conflict_by_year <- finaldata %>%
+  filter(armed_conflict == 1) %>%        
+  group_by(year) %>%               #
+  summarise(n_countries = n_distinct(iso)) %>%   
+  arrange(year)
+
+conflict_by_year
+```
+
+
+### Which countries have missing data?
+```{r}
+library(dplyr)
+
+countries_with_missing <- finaldata %>%
+  group_by(iso) %>%                         
+  filter(any(is.na(across(everything())))) %>%   
+  distinct(iso)                            
+
+countries_with_missing
+names(finaldata)
+```
+
+```{r} 
+library(dplyr)
+
+top10 <- conflictdata %>%
+  group_by(iso) %>%
+  summarise(total_conflicts = n_distinct(conflict_id)) %>%
+  arrange(desc(total_conflicts)) %>%
+  slice_head(n = 10)
+conflict_top10 <- conflictdata %>%
+  filter(iso %in% top10$iso)
+conflicts_top10_per_year <- conflict_top10 %>%
+  group_by(year) %>%
+  summarise(n_conflicts = n_distinct(conflict_id)) %>%
+  arrange(year)
+library(ggplot2)
+
+ggplot(conflicts_top10_per_year, aes(x = year, y = n_conflicts)) +
+  geom_line(color = "firebrick", linewidth = 1.2) +
+  geom_point(color = "firebrick", size = 2) +
+  theme_minimal() +
+  labs(
+    title = "Number of Armed Conflicts per Year (Top 10 Most Conflict-Prone Countries)",
+    subtitle = "Each point represents the total number of conflicts occurring among top 10 countries",
+    x = "Year",
+    y = "Number of Conflicts"
+  ) +
+  theme(
+    plot.title = element_text(size = 14, face = "bold"),
+    plot.subtitle = element_text(size = 10)
+  )
+
+```
+Summary: From 1998 to 2018, the number of armed conflicts in the ten most conflict-affected countries increased steadily, almost doubling over time. Conflict levels stayed fairly stable in the early 2000s but rose sharply after 2010, reaching their highest point around 2016–2018. This increase likely reflects growing political instability and multiple overlapping conflicts during the past decade, such as those linked to the Arab Spring and ongoing wars in the Middle East and Africa.
+
+
