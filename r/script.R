@@ -134,7 +134,7 @@ summary(combined_all_dfs)
 
 finaldata <- read.csv("/Users/achlys/Desktop/week3-inclass-Sheen-T-main/data/analytical/finaldataset.csv")
 
-finaldata[is.na(finaldata)] <- 0
+
 finaldata <- finaldata %>% select(-1)
 
 
